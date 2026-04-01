@@ -20,7 +20,7 @@ function SignIn() {
   const [state, formAction] = useActionState(loginUser, { message: "" });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 w-full">
       <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg border border-gray-100">
         <div className="text-center">
           <h2 className="text-3xl font-extrabold text-gray-900">

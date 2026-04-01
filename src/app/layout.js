@@ -1,13 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
-import {
-  Menubar,
-  MenubarMenu,
-  MenubarRadioGroup,
-  MenubarRadioItem,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,19 +23,6 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Menubar className={"p-5"}>
-          <MenubarMenu>
-            <MenubarTrigger>Todos</MenubarTrigger>
-            <MenubarRadioGroup value="benoit" className="flex ml-10 gap-2">
-              <Link href={"/add-Todos"} className="bg-amber-600 text-white p-1">
-                Add Todos
-              </Link>
-              <Link href={"/show-Todos"} className="bg-red-600 text-white p-1">
-                Show Todos
-              </Link>
-            </MenubarRadioGroup>
-          </MenubarMenu>
-        </Menubar>
         {children}
       </body>
     </html>

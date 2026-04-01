@@ -1,6 +1,8 @@
 "use client";
 import { loginUser } from "@/app/actions/addUser";
-import React, { useActionState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 
 function SubmitButton() {
@@ -17,8 +19,17 @@ function SubmitButton() {
 }
 
 function SignIn() {
-  const [state, formAction] = useActionState(loginUser, { message: "" });
+  const router = useRouter();
+  const [state, formAction] = useActionState(loginUser, {
+    message: "",
+    success: false,
+  });
 
+  useEffect(() => {
+    if (state?.success) {
+      router.push("/home");
+    }
+  }, [router, state?.success]);
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 w-full">
       <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg border border-gray-100">
@@ -78,12 +89,12 @@ function SignIn() {
 
         <p className="text-center text-sm text-gray-600">
           Don't have an account?{" "}
-          <a
+          <Link
             href="/signup"
             className="font-medium text-indigo-600 hover:text-indigo-500"
           >
             Sign up
-          </a>
+          </Link>
         </p>
       </div>
     </div>

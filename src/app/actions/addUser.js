@@ -42,7 +42,7 @@ export async function loginUser(prevState, formData) {
   if (!isPasswordValid) {
     return { error: "Invalid password", success: false };
   }
-  const token = await createToken({ user });
+  const token = await createToken({ id: user._id, name: user.name });
 
   cookieStore.set("token", token, {
     path: "/",

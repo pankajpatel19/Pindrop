@@ -2,7 +2,10 @@
 import ConnectDB from "@/config/db.config";
 import User from "@/models/user.model";
 import bcrypt from "bcrypt";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
+import { createToken } from "@/lib/token";
 
 export async function createUser(prevState, formData) {
   await ConnectDB();
@@ -39,10 +42,9 @@ export async function loginUser(prevState, formData) {
   if (!isPasswordValid) {
     return { error: "Invalid password", success: false };
   }
+  const token = await createToken({ user });
 
-  console.log(isPasswordValid);
-
-  cookieStore.set("token", {
+  cookieStore.set("token", token, {
     path: "/",
     httpOnly: false,
     secure: false,
@@ -60,12 +62,12 @@ export async function currentUser() {
   if (!token) {
     return null;
   }
-
   return !!token;
 }
 
 export async function logoutUser() {
   const cookieStore = await cookies();
   cookieStore.delete("token");
+  revalidatePath("/home");
   return { message: "Logout successful", success: true };
 }

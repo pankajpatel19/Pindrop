@@ -1,5 +1,3 @@
-import HomeComponent from "@/components/ui/SIdeBar";
-
 function HomeLayout({ children }) {
   return (
     <div className="flex h-screen overflow-hidden">

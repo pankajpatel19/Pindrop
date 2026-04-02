@@ -19,21 +19,21 @@ function SideBar() {
         </Link>
 
         <Link
-          href="/pin-creation"
+          href="/home/pin-creation"
           className="p-3 rounded-full hover:bg-gray-100 transition-colors text-gray-800"
         >
           <Upload size={25} />
         </Link>
 
         <Link
-          href="/boards"
+          href="/home/boards"
           className="p-3 rounded-full hover:bg-gray-100 transition-colors text-gray-800"
         >
           <Layout size={25} />
         </Link>
 
         <Link
-          href="/updates"
+          href="/home/updates"
           className="p-3 rounded-full hover:bg-gray-100 transition-colors text-gray-800 relative"
         >
           <Bell size={25} />
@@ -41,7 +41,7 @@ function SideBar() {
         </Link>
 
         <Link
-          href="/messages"
+          href="/home/messages"
           className="p-3 rounded-full hover:bg-gray-100 transition-colors text-gray-800"
         >
           <MessageCircle size={25} />
@@ -49,7 +49,7 @@ function SideBar() {
 
         <div className="mt-auto mb-4">
           <Link
-            href="/setting"
+            href="/home/setting"
             className="p-3 rounded-full hover:bg-gray-100 transition-colors text-gray-800"
           >
             <Settings size={25} />

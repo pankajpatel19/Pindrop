@@ -1,9 +1,12 @@
 "use server";
+import ConnectDB from "@/config/db.config";
 import User from "@/models/user.model";
 import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
 
 export async function createUser(prevState, formData) {
+  await ConnectDB();
+
   const name = formData.get("name");
   const email = formData.get("email");
   const password = formData.get("password");
@@ -20,6 +23,7 @@ export async function createUser(prevState, formData) {
 }
 
 export async function loginUser(prevState, formData) {
+  await ConnectDB();
   const cookieStore = await cookies();
 
   const email = formData.get("email");
@@ -35,6 +39,8 @@ export async function loginUser(prevState, formData) {
   if (!isPasswordValid) {
     return { error: "Invalid password", success: false };
   }
+
+  console.log(isPasswordValid);
 
   cookieStore.set("token", {
     path: "/",
@@ -56,4 +62,10 @@ export async function currentUser() {
   }
 
   return !!token;
+}
+
+export async function logoutUser() {
+  const cookieStore = await cookies();
+  cookieStore.delete("token");
+  return { message: "Logout successful", success: true };
 }

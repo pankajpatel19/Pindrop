@@ -4,12 +4,13 @@ import { Input } from "./input";
 import Link from "next/link";
 import { Button } from "./button";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
-import { currentUser } from "@/app/actions/addUser";
+import { currentUser, logoutUser } from "@/app/actions/addUser";
 import { User } from "lucide-react";
 import Image from "next/image";
+
 function NavBar() {
   const [token, setToken] = useState(false);
+  const [profile, setProfile] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -22,7 +23,18 @@ function NavBar() {
       }
     }
     checkLoginUser();
-  }, []);
+  }, [token]);
+
+  const handleLogout = () => {
+    async function logout() {
+      console.log("call");
+
+      await logoutUser();
+      setToken(false);
+      router.push("/");
+    }
+    logout();
+  };
 
   return (
     <header className="flex items-center gap-3 px-4 py-3 bg-white sticky top-0 z-50 w-full border-b">
@@ -43,7 +55,36 @@ function NavBar() {
         </div>
 
         {token ? (
-          <User />
+          <div className="relative">
+            <Button
+              variant="outline"
+              onClick={() => setProfile(!profile)}
+              className="rounded-full font-bold h-10 w-10 p-0 flex items-center justify-center"
+            >
+              <User className="w-5 h-5" />
+            </Button>
+            {/* Dropdown Menu */}
+            {profile && (
+              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg py-2 z-50">
+                <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition">
+                  Settings
+                </button>
+
+                <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition">
+                  Switch Account
+                </button>
+
+                <hr className="my-1 border-gray-100" />
+
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 text-sm text-red-600 font-semibold hover:bg-red-50 transition cursor-pointer"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         ) : (
           <>
             {" "}

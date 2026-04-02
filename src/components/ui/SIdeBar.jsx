@@ -7,7 +7,7 @@ import {
   Upload,
 } from "lucide-react";
 import Link from "next/link";
-function HomeComponent() {
+function SideBar() {
   return (
     <>
       <aside className="sticky top-0 left-0 h-screen w-20 flex flex-col items-center py-5 gap-5 border-r bg-white">
@@ -19,14 +19,14 @@ function HomeComponent() {
         </Link>
 
         <Link
-          href="/create"
+          href="/pin-creation"
           className="p-3 rounded-full hover:bg-gray-100 transition-colors text-gray-800"
         >
           <Upload size={25} />
         </Link>
 
         <Link
-          href="/layout"
+          href="/boards"
           className="p-3 rounded-full hover:bg-gray-100 transition-colors text-gray-800"
         >
           <Layout size={25} />
@@ -60,4 +60,4 @@ function HomeComponent() {
   );
 }
 
-export default HomeComponent;
+export default SideBar;

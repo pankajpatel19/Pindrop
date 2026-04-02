@@ -14,5 +14,5 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/login", "/home/:path*"],
+  matcher: ["/login", "/home/:path*", "/pin-creation/:path*"],
 };

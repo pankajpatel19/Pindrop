@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 import { verifyToken } from "./lib/token";
 

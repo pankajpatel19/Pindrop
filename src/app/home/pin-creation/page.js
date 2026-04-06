@@ -1,16 +1,16 @@
+
 import PinCreate from "@/components/Creation/PinCreate";
-import { cookies, headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+import {  headers } from "next/headers";
 import React from "react";
 
 async function PinCreation() {
-  const Cookie = await cookies();
-  const token = Cookie.get("token")?.value;
-  if (!token) {
-    redirect("/signin");
-  }
 
-  // const role = JSON.parse((await headers()).get("user-role"));
+  const {session,user} =await auth.api.getSession({
+    headers : await headers(),
+  });
+
+  
 
   return (
     <div>

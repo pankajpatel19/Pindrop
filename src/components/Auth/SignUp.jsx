@@ -1,31 +1,55 @@
 "use client";
-import React, { useActionState } from "react";
-import { createUser } from "../../app/actions/addUser";
-import { useFormStatus } from "react-dom";
+import React, { useState } from "react";
+import { signUp } from "@/lib/auth-client";
 import Link from "next/link";
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:bg-gray-400"
-    >
-      {pending ? "Saving..." : "Add User"}
-    </button>
-  );
-}
+import { useRouter } from "next/navigation";
+import {authClient} from "@/lib/auth-client"
 
 function SignUp() {
-  const [state, formAction] = useActionState(createUser, { message: "" });
+  const router = useRouter();
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setPending(true);
+    setError("");
+
+    const formData = new FormData(e.currentTarget);
+    const name = formData.get("name");
+    const email = formData.get("email");
+    const password = formData.get("password");
+    const confirmPassword = formData.get("ConfirmPassword");
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      setPending(false);
+      return;
+    }
+
+
+    await authClient.signUp.email({
+      email,
+      password,
+      name,
+      fetchOptions:{
+        onSuccess:()=>{
+          router.push("/")
+        },
+        onError:(ctx)=>{
+          setError(ctx.error.message)
+          setPending(false) 
+        }
+      }
+    });
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
         <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
 
-        <form action={formAction} className="flex flex-col space-y-4">
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
           <div className="flex flex-col">
             <label className="text-sm font-medium">Name</label>
             <input
@@ -72,11 +96,15 @@ function SignUp() {
               Sign In
             </Link>
           </div>
-          {state?.message && (
-            <p className="text-red-500 text-sm">{state.message}</p>
-          )}
+          {error && <p className="text-red-500 text-sm">{error}</p>}
 
-          <SubmitButton />
+          <button
+            type="submit"
+            disabled={pending}
+            className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:bg-gray-400"
+          >
+            {pending ? "Saving..." : "Add User"}
+          </button>
         </form>
       </div>
     </div>

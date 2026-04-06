@@ -1,7 +1,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import WrapperNavBar from "@/components/ui/WrapperNavBar";
-import { currentUser } from "./actions/addUser";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
 import SideBar from "@/components/ui/SIdeBar";
 
 const geistSans = Geist({
@@ -20,7 +21,8 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const res = await currentUser();
+  const { user: res } =
+    (await auth.api.getSession({ headers: await headers() })) || {};
 
   return (
     <html lang="en">
@@ -36,7 +38,6 @@ export default async function RootLayout({ children }) {
               <SideBar />
             </aside>
           )}
-
           <main className="flex-1 overflow-y-auto">{children}</main>
         </div>
       </body>

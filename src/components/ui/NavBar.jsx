@@ -4,36 +4,24 @@ import { Input } from "./input";
 import Link from "next/link";
 import { Button } from "./button";
 import { useRouter } from "next/navigation";
-import { currentUser, logoutUser } from "@/app/actions/addUser";
+import { useSession, signOut } from "@/lib/auth-client";
 import { User } from "lucide-react";
 import Image from "next/image";
 
 function NavBar() {
-  const [token, setToken] = useState(false);
   const [profile, setProfile] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    async function checkLoginUser() {
-      const res = await currentUser();
-      if (res) {
-        setToken(res);
-      } else {
-        setToken(false);
-      }
-    }
-    checkLoginUser();
-  }, [token]);
+  const { data: session, isPending } = useSession();
 
-  const handleLogout = () => {
-    async function logout() {
-      console.log("call");
-
-      await logoutUser();
-      setToken(false);
-      router.push("/");
-    }
-    logout();
+  const handleLogout = async () => {
+    await signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/");
+        },
+      },
+    });
   };
 
   return (
@@ -47,14 +35,16 @@ function NavBar() {
           src={"/favicon.png"}
         />
 
-        <div className="flex-1">
-          <Input
-            className="w-full h-12 bg-[#efefef] border-none rounded-2xl px-5 focus-visible:ring-2 focus-visible:ring-blue-400 transition-all"
-            placeholder="Search photos"
-          />
-        </div>
+        {session && (
+          <div className="flex-1">
+            <Input
+              className="w-full h-12 bg-[#efefef] border-none rounded-2xl px-5 focus-visible:ring-2 focus-visible:ring-blue-400 transition-all"
+              placeholder="Search photos"
+            />
+          </div>
+        )}
 
-        {token ? (
+        {session ? (
           <div className="relative">
             <Button
               variant="outline"
@@ -88,7 +78,7 @@ function NavBar() {
         ) : (
           <>
             {" "}
-            <nav className="flex items-center gap-4 shrink-0">
+            <nav className="flex items-center gap-4 shrink-0 ml-auto">
               <Link
                 href="/about"
                 className="font-semibold text-[15px] hover:bg-gray-100 p-2 px-3 rounded-full transition-colors"
@@ -116,7 +106,7 @@ function NavBar() {
 
               <Button
                 variant="outline"
-                className="rounded-full font-bold border-none bg-gray-100 hover:bg-gray-200 h-11 px-4 cursor-grab"
+                className="rounded-full font-bold border-none bg-gray-100 hover:bg-gray-200 h-11 px-4 cursor-pointer"
                 onClick={() => router.push("/signin")}
               >
                 Log in
@@ -124,7 +114,7 @@ function NavBar() {
 
               <Button
                 variant="outline"
-                className="rounded-full font-bold bg-[#f01233] hover:bg-[#f00a25] text-white border-none h-11 px-4 cursor-grab"
+                className="rounded-full font-bold bg-[#f01233] hover:bg-[#f00a25] text-white border-none h-11 px-4 cursor-pointer"
                 onClick={() => router.push("/signup")}
               >
                 Sign Up

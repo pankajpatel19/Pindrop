@@ -2,6 +2,7 @@
 import React, { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { Upload } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 const BOARDS = ["Inspiration", "Mood Board", "Projects", "Design", "Travel"];
 
@@ -14,7 +15,7 @@ export default function PinCreate() {
     link: "",
     board: "",
   });
-
+  
   const fileInputRef = useRef(null);
 
   const handleFile = useCallback((file) => {

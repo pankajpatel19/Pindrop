@@ -1,35 +1,38 @@
 "use client";
-import { loginUser } from "@/app/actions/addUser";
+import { authClient, signIn } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useActionState, useEffect } from "react";
-import { useFormStatus } from "react-dom";
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors disabled:bg-indigo-400"
-    >
-      {pending ? "Signing in..." : "Sign In"}
-    </button>
-  );
-}
+import React, { useState } from "react";
 
 function SignIn() {
   const router = useRouter();
-  const [state, formAction] = useActionState(loginUser, {
-    message: "",
-    success: false,
-  });
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (state?.success) {
-      router.push("/home");
-    }
-  }, [router, state?.success]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setPending(true);
+    setError("");
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    await authClient.signIn.email({
+      email,
+      password,
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/home");
+        },
+        onError: (ctx) => {
+          setError(ctx.error.message || "Failed to sign in. Please try again.");
+          setPending(false);
+        },
+      },
+    });
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 w-full">
       <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg border border-gray-100">
@@ -42,7 +45,7 @@ function SignIn() {
           </p>
         </div>
 
-        <form action={formAction} className="mt-8 space-y-6">
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div className="rounded-md shadow-sm space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">
@@ -70,20 +73,36 @@ function SignIn() {
             </div>
           </div>
 
-          {/* Server Error Message */}
-          {state?.error && (
+          {error && (
             <div className="text-red-500 text-sm text-center bg-red-50 p-2 rounded border border-red-200">
-              {state.error}
-            </div>
-          )}
-          {state?.message && (
-            <div className="text-green-500 text-sm text-center bg-green-100 p-2 rounded border border-red-200">
-              {state.message}
+              {error}
             </div>
           )}
 
           <div>
-            <SubmitButton />
+            <button
+              type="submit"
+              disabled={pending}
+              className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors disabled:bg-indigo-400"
+            >
+              {pending ? "Signing in..." : "Sign In"}
+            </button>
+          </div>
+
+          <div>
+            <button
+              onClick={async (e) => {
+                e.preventDefault();
+                await signIn.social({
+                  provider: "google",
+                  callbackURL: "/home",
+                });
+              }}
+              type="button"
+              className="w-full bg-white text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              Login with Google
+            </button>
           </div>
         </form>
 
@@ -91,7 +110,7 @@ function SignIn() {
           Don&apos;t have an account?
           <Link
             href="/signup"
-            className="font-medium text-indigo-600 hover:text-indigo-500"
+            className="font-medium text-indigo-600 hover:text-indigo-500 ml-1"
           >
             Sign up
           </Link>

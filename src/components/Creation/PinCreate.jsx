@@ -2,20 +2,20 @@
 import React, { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { Upload } from "lucide-react";
-import { authClient } from "@/lib/auth-client";
+import axios from "axios";
 
 const BOARDS = ["Inspiration", "Mood Board", "Projects", "Design", "Travel"];
 
 export default function PinCreate() {
   const [image, setImage] = useState(null);
-  const [isDragging, setIsDragging] = useState(false);
+
   const [form, setForm] = useState({
     title: "",
     description: "",
     link: "",
     board: "",
   });
-  
+
   const fileInputRef = useRef(null);
 
   const handleFile = useCallback((file) => {
@@ -24,48 +24,54 @@ export default function PinCreate() {
       alert("File must be under 20MB.");
       return;
     }
-    setImage(URL.createObjectURL(file));
+
+    setImage(file);
   }, []);
 
   const handleInputChange = (e) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files[0];
     if (file) handleFile(file);
   };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const file = e.dataTransfer.files?.[0];
-    if (file) handleFile(file);
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = () => setIsDragging(false);
 
   const handleFormChange = (field) => (e) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     if (!image) return alert("Please upload an image.");
     if (!form.title.trim()) return alert("Please add a title.");
-    console.log("Publishing pin:", { image, ...form });
+
+    try {
+      const formData = new FormData();
+      formData.append("title", form.title);
+      formData.append("description", form.description);
+      formData.append("link", form.link);
+      formData.append("board", form.board);
+      formData.append("image", image);
+
+      const data = await axios.post("/api/pins/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setImage(null);
+      setForm({
+        title: "",
+        description: "",
+        link: "",
+        board: "",
+      });
+    } catch (error) {
+      console.log("error :", error);
+    }
   };
 
   return (
     <div className="flex flex-col md:flex-row max-w-4xl mx-auto mt-10 bg-white rounded-3xl overflow-hidden shadow-sm border border-zinc-100">
       {/* LEFT: Upload Area */}
       <div
-        className={`w-full md:w-[44%] min-h-[500px] relative flex items-center justify-center cursor-pointer transition-colors duration-200 ${
-          isDragging ? "bg-zinc-200" : "bg-zinc-50"
-        } md:border-r border-zinc-100`}
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
+        className="w-full md:w-[44%] min-h-[500px] relative flex items-center justify-center cursor-pointer transition-colors duration-200 bg-zinc-50 md:border-r border-zinc-100"
         onClick={() => !image && fileInputRef.current?.click()}
       >
         {!image ? (
@@ -75,9 +81,8 @@ export default function PinCreate() {
             </div>
             <div>
               <p className="text-sm font-semibold text-zinc-800 font-serif">
-                Drop your image here
+                Click to upload
               </p>
-              <p className="text-xs text-zinc-400 mt-1">or click to browse</p>
             </div>
             <p className="text-xs text-zinc-300 leading-relaxed">
               High-quality .jpg under 20MB
@@ -95,7 +100,7 @@ export default function PinCreate() {
         ) : (
           <>
             <Image
-              src={image}
+              src={image ?? ""}
               alt="Pin preview"
               fill
               className="object-cover"

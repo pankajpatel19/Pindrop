@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "title": "Mountain View",
+    "description": "A beautiful view of the snowy mountains during sunset.",
+    "imageUrl": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b",
+    "author": "John Doe",
+    "category": "Nature"
+  },
+  {
+    "id": 2,
+    "title": "Modern Architecture",
+    "description": "Striking glass building in the heart of the city.",
+    "imageUrl": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab",
+    "author": "Jane Smith",
+    "category": "Architecture"
+  },
+  {
+    "id": 3,
+    "title": "Cozy Café",
+    "description": "The perfect spot for a morning coffee and reading.",
+    "imageUrl": "https://images.unsplash.com/photo-1554118811-1e0d58224f24",
+    "author": "Alex Green",
+    "category": "Lifestyle"
+  },
+  {
+    "id": 4,
+    "title": "Cyberpunk Streets",
+    "description": "Neon lights and rain-slicked streets at night.",
+    "imageUrl": "https://images.unsplash.com/photo-1545143333-11bb24019ea2",
+    "author": "Sam Rivera",
+    "category": "Cyberpunk"
+  },
+  {
+    "id": 5,
+    "title": "Minimalist Desktop",
+    "description": "Clean workspace for maximum productivity.",
+    "imageUrl": "https://images.unsplash.com/photo-14997503101ec2-d99d2319f3e" ,
+    "author": "Emma Watson",
+    "category": "Tech"
+  }
+]

@@ -12,7 +12,7 @@ function SideBar() {
     <>
       <aside className="sticky top-0 left-0 h-screen w-20 flex flex-col items-center py-5 gap-5 border-r bg-white">
         <Link
-          href="/"
+          href="/home"
           className="p-3 rounded-full hover:bg-gray-100 transition-colors text-gray-800"
         >
           <HomeIcon size={25} />

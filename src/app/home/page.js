@@ -2,14 +2,21 @@ import ShowPins from "@/components/Pin/ShowPins";
 import React from "react";
 export const dynamic = "force-dynamic";
 
+import ConnectDB from "@/config/db.config";
+import Pin from "@/models/pin.model";
+
 async function HomePage() {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL ||
-    (process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000");
-  const res = await fetch(`${baseUrl}/api/pins/upload`);
-  const data = await res.json();
+  await ConnectDB();
+  const allPins = await Pin.find({}).sort().lean();
+
+  // Parse through JSON to serialize MongoDB ObjectIDs correctly for client components
+  const data = JSON.parse(
+    JSON.stringify({
+      message: "Pins Found SuccessFUlly",
+      pins: allPins,
+    }),
+  );
+
   return (
     <>
       <ShowPins pins={data} />

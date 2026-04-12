@@ -1,16 +1,19 @@
 import PinDetail from "@/components/Pin/PinDetails";
-import api from "@/utils/axios";
+import ConnectDB from "@/config/db.config";
+import Pin from "@/models/pin.model";
 import React from "react";
 
 async function PinDetails({ params }) {
   const { id } = await params;
 
-  const res = await api.get(`/pins/${id}`);
-  const data = await res.data;
+  await ConnectDB();
+  const pin = await Pin.findById(id).lean();
+
+  const serializedPin = JSON.parse(JSON.stringify(pin));
 
   return (
     <>
-      <PinDetail pin={data.pin} />
+      <PinDetail pin={serializedPin} />
     </>
   );
 }

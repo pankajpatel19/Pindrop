@@ -3,7 +3,12 @@ import React from "react";
 export const dynamic = "force-dynamic";
 
 async function HomePage() {
-  const res = await fetch("http://localhost:3000/api/pins/upload");
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_URL ||
+    (process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000");
+  const res = await fetch(`${baseUrl}/api/pins/upload`);
   const data = await res.json();
   return (
     <>

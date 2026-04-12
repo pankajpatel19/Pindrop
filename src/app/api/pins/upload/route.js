@@ -57,3 +57,19 @@ export async function POST(request) {
     { status: 200 },
   );
 }
+
+export async function GET(request) {
+  try {
+    const allPins = await Pin.find({}).sort();
+    if (!allPins) {
+      return NextResponse.json({ message: "No Pins Found" }, { status: 404 });
+    }
+
+    return NextResponse.json(
+      { message: "Pins Found SuccessFUlly", pins: allPins },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.log(error);
+  }
+}

@@ -8,6 +8,7 @@ const BOARDS = ["Inspiration", "Mood Board", "Projects", "Design", "Travel"];
 
 export default function PinCreate() {
   const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
 
   const [form, setForm] = useState({
     title: "",
@@ -24,7 +25,7 @@ export default function PinCreate() {
       alert("File must be under 20MB.");
       return;
     }
-
+    setPreview(URL.createObjectURL(file));
     setImage(file);
   }, []);
 
@@ -100,7 +101,7 @@ export default function PinCreate() {
         ) : (
           <>
             <Image
-              src={image ?? ""}
+              src={preview ?? ""}
               alt="Pin preview"
               fill
               className="object-cover"

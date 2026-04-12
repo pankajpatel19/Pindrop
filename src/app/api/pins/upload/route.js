@@ -5,9 +5,8 @@ import Pin from "@/models/pin.model";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-await ConnectDB();
-
 export async function POST(request) {
+  await ConnectDB();
   try {
     const { session, user } = await auth.api.getSession({
       headers: await headers(),
@@ -59,6 +58,7 @@ export async function POST(request) {
 }
 
 export async function GET(request) {
+  await ConnectDB();
   try {
     const allPins = await Pin.find({}).sort();
     if (!allPins) {

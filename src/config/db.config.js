@@ -16,7 +16,7 @@ if (!cache) {
 
 const ConnectDB = async () => {
   if (cache.conn) {
-    return cache.con;
+    return cache.conn;
   }
 
   if (!cache.promise) {

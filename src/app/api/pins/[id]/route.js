@@ -1,7 +1,9 @@
 import Pin from "@/models/pin.model";
+import ConnectDB from "@/config/db.config";
 import { NextResponse } from "next/server";
 
 export async function GET(request, { params }) {
+  await ConnectDB();
   try {
     const { id } = await params;
     const pin = await Pin.findById(id);

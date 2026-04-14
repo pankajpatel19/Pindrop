@@ -1,5 +1,6 @@
 import {
   Bell,
+  Compass,
   HomeIcon,
   Layout,
   MessageCircle,
@@ -16,6 +17,13 @@ function SideBar() {
           className="p-3 rounded-full hover:bg-gray-100 transition-colors text-gray-800"
         >
           <HomeIcon size={25} />
+        </Link>
+
+        <Link
+          href="/home/ideas"
+          className="p-3 rounded-full hover:bg-gray-100 transition-colors text-gray-800"
+        >
+          <Compass size={25} />
         </Link>
 
         <Link

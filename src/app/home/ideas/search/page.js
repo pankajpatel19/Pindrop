@@ -37,10 +37,11 @@ async function SearchPage({ searchParams }) {
             <div key={index} className="break-inside-avoid mb-6 group h-fit">
               <div className="relative overflow-hidden rounded-3xl bg-zinc-50 shadow-sm border border-zinc-100 transition-all cursor-pointer">
                 <Image
-                  src={`https://source.unsplash.com/random/?${query}&${index}`}
+                  src={`https://images.unsplash.com/featured/800x600?${query}&sig=${index}`}
                   alt={query}
                   width={400}
                   height={600}
+
                   className="w-full h-auto object-cover rounded-3xl transition-all duration-500 group-hover:brightness-90"
                   loading="lazy"
                 />
